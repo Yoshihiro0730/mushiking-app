@@ -1,0 +1,232 @@
+body{
+    margin:0;
+    padding:0;
+    text-align:left;
+    font-size: 32px;
+    background-image: url("../img/forest.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+header{
+    background-color: 255, 255, 255, 0.7;
+    /* opacity: .5; */
+    /* border-bottom: 1px solid #ccc; */
+    text-align: center;
+    color: #fff;
+}
+main{
+    /* border-bottom:1px solid #ccc; */
+}
+footer{
+    background-color: #fff;
+    /* border-bottom:1px solid #ccc; */
+    text-align: center;
+}
+p{
+    font-size:200%;
+    text-align: center;
+    border-bottom:1px solid #fff;
+    height:200px;
+}
+ul{
+    padding: 0;
+    border-top: 1px solid #000000; 
+    display:table ;
+    table-layout: fixed;
+    width:100%;
+}
+li{
+    text-align: center;
+    list-style-type:none;
+    border: 1px solid #666;
+    background-color: #FFF;
+    display:table-cell;
+    cursor: pointer;
+}
+
+#modal-wrapper {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 100;
+    display: none;
+}
+
+.choice-beat {
+    width:80%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #e6ecf0;
+    padding: 20px 0 40px;
+    border-radius: 10px;
+    /* width: 450px; */
+    height: auto;
+    text-align: center;
+}
+
+.mushi-img {
+    /* display: flex; */
+    /* align-items: center; */
+    padding: 10px;
+    margin: 0 auto;
+}
+
+.mushi-img img{
+    width:300px;
+    display: block;
+    margin: 0 auto;
+    /* height: 30px; */
+    object-fit: contain;
+}
+
+#submit-btn {
+    display: inline-block;
+    padding: 14px 140px;
+    background-color: #5dca88;
+    border: none;
+    border-radius: 3px;
+    color: white;
+    margin: 10px auto;
+    cursor: pointer;
+}
+
+#user-beat-profile{
+    width: 50%;
+    /* height: 30%; */
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    background-color: rgba(255, 255, 255, 0.7);
+    text-align: center;
+}
+
+#selected_beat_img {
+    height: 300px;
+}
+
+#user-beat-profile ul {
+    border: none;
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    /* width: 50%; */
+}
+
+#user-beat-profile li {
+    border: none;
+    text-align: left;
+    background-color: rgba(255, 255, 255, 0);
+    margin: auto 20px;
+}
+
+/* バトル画面 */
+#battle_wrapper {
+    display: flex;
+    justify-content: center;
+    margin: auto;
+}
+
+#user_battle_wrapper {
+    margin: 0 20vw;
+}
+
+#enemy_battle_wrapper {
+    margin: 0 20vw;
+}
+
+#user_name, #enemy_name {
+    text-align: center;
+    color: #fff;
+}
+
+#user_beat_img, #enemy_beat_img {
+    width: auto;
+    height: 400px;
+}
+
+#selected_hand_img, #enemy_hand_img {
+    width: auto;
+    height: 300px;
+}
+
+/* HPバーの部分 */
+#life_wrapper {
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    gap: 30vw;
+}
+
+#user_life_wrapper, #enemy_life_wrapper {
+    width: 500px;
+    height: 20px;
+    background-color: #ddd;
+    border: 1px solid #000;
+}
+
+#user_life_bar, #enemy_life_bar {
+    width: 100%;
+    height: 100%;
+    background-color: #0f0;
+    transition: width 0.5s linear;
+}
+
+#select-btn, #battle_start {
+    display: block;
+    margin: 100px auto;
+    width: 500px;
+    height: auto;
+    font-size: 24px;
+    background-color: aquamarine;
+    border-radius: 30px;
+    cursor: pointer;
+}
+
+#select-btn:hover {
+    box-shadow: 0 5px 10px rgba(255, 255, 255, 0.5);
+}
+
+#battle_start:hover {
+    box-shadow: 0 5px 10px rgba(255, 255, 255, 0.5);
+}
+
+#janken-wrapper {
+    width: 50%;
+    margin: auto;
+    border-top: none;
+}
+
+#gu_btn {
+    background-color: #f0908d;
+    border-radius: 20px;
+}
+
+#cho_btn {
+    background-color: #f2f2b0;
+    border-radius: 20px;
+}
+
+#par_btn {
+    background-color: #83ccd2;
+    border-radius: 20px;
+}
+
+#gu_btn:hover {
+    box-shadow: 0 5px 10px rgba(255, 255, 255, 1);
+    transform: scale(1.2, 1.2);
+}
+
+#cho_btn:hover {
+    box-shadow: 0 5px 10px rgba(255, 255, 255, 1);
+    transform: scale(1.2, 1.2);
+}
+
+#par_btn:hover {
+    box-shadow: 0 5px 10px rgba(255, 255, 255, 1);
+    transform: scale(1.2, 1.2);
+}

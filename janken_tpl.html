@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<script src="js/jquery-2.1.3.min.js"></script>
+<link rel="stylesheet" href="css/sample.css">
+<title>じゃんけん</title>
+</head>
+<body>
+
+<header>
+  <h1>ムシキング Web</h1>
+</header>
+
+<main>
+  <div class="mushi-king-wrapper">
+    <button id="select-btn">虫を選ぶ</button>
+    <div id="modal-wrapper">
+      <div class="choice-beat">
+        <h2>使用する昆虫を選んでね！</h2>
+        <form action="">
+          <ul class="select-wrapper">
+            <li class="mushi-img" id="select_beat"><img src="./img/kabutomushi_2.jpg" alt=""><span>カブトムシ</span></li>
+            <li class="mushi-img" id="select_beat"><img src="./img/kuwagata.jpg" alt=""><span>クワガタ</span></li>
+            <li class="mushi-img" id="select_beat"><img src="./img/herakuresu_2.jpg" alt=""><span>ヘラクレスオオカブト</span></li>
+          </ul>
+          <div id="submit-btn">この虫に決まり！</div>
+        </form>
+      </div>
+    </div>
+    <div id="user-beat-profile">
+      <img id="selected_beat_img" src="" alt="">
+      <ul>
+        <li id="gu_tech"></li>
+        <li id="choki_tech"></li>
+        <li id="par_tech"></li>
+      </ul>
+    </div>
+    <button id="battle_start">勝負開始</button>
+    <ul id="janken-wrapper">
+      <li id="gu_btn" data-id="1">グー</li>
+      <li id="cho_btn" data-id="2">チョキ</li>
+      <li id="par_btn" data-id="3">パー</li>
+    </ul>
+    <!-- バトル画面 -->
+    <div id="battle_wrapper">
+      <div id="user_battle_wrapper">
+        <h2 id="user_name">You</h2>
+        <img id="user_beat_img" src="" alt="">
+        <div id="user_selected_hand">
+          <img id="selected_hand_img" src="" alt="">
+          <h2 id="selected_hand_text"></h2>
+        </div>
+      </div>
+      <div id="enemy_battle_wrapper">
+        <h2 id="enemy_name">Enemy</h2>
+        <img id="enemy_beat_img" src="" alt="">
+        <div id="enemy_selected_hand">
+          <img id="enemy_hand_img" src="" alt="">
+          <h2 id="enemy_hand_text"></h2>
+        </div>
+      </div>
+    </div>
+    <div id="life_wrapper">
+      <div id="user_life_wrapper">
+        <div id="user_life_bar"></div>
+      </div>
+      <div id="enemy_life_wrapper">
+        <div id="enemy_life_bar"></div>
+      </div>
+    </div>
+    
+    <!-- <div>コンピュータの出した手は？「<span id="pc_hands">なに？</span>」</div>
+    <div id="judgment">勝ち</div> -->
+  </div>
+</main>
+
+<footer></footer>
+<script>
+//じゃんけん用のSCRIPTを書いてください
+// グー：1、チョキ：2、パー：3
+  
+  // グローバル変数定義
+  let user_beat = null;
+  let selected_beat = null;
+  let max_user_hp = 0;
+  let current_user_hp = 0;
+  let max_enemy_hp = 0;
+  let current_enemy_hp = 0;
+
+  const kabutomushi = {
+    image: "./img/kabutomushi_2.jpg",
+    gu: "ガンガンスマッシュ",
+    gu_power: 1.2,
+    choki: "ブルロック",
+    choki_power: 1.2,
+    par: "トルネードスロー",
+    par_power: 1.8,
+    max_hp: 160
+  }
+
+  const herakuresu = {
+    image: "./img/herakuresu_2.jpg",
+    gu: "ドラゴンアタック",
+    gu_power: 1.5,
+    choki: "デビルスリーパー",
+    choki_power: 1.5,
+    par: "ローリングドライバー",
+    par_power: 2.0,
+    max_hp: 200
+  }
+
+  const hand_image = {
+    gu: "./img/gu.png",
+    choki: "./img/choki.png",
+    par: "./img/par.png"
+  }
+
+  // ローカルストレージへHPを格納
+  function insertHP(key, value) {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+
+  // ローカルストレージからデータを取得する関数
+  function getHP(key, defaultValue) {
+    const storedValue = localStorage.getItem(key);
+    return storedValue !== null ? JSON.parse(storedValue) : defaultValue;
+  }
+
+  // ダメージ換算関数
+  function attackDamage(damage, target) {
+    let animationEnded = false;
+    let hpZero = false;
+    let enemy_hpPercentage = 100;
+    let calculatedPercentage = 100;
+
+    if (target === "user" || target === "") {
+      current_user_hp = getHP("current_user_hp", current_user_hp);
+      current_user_hp = Math.max(0, current_user_hp - damage);
+      insertHP("current_user_hp", current_user_hp);
+      let user_hpPercentage = Math.floor((current_user_hp / max_user_hp) * 100);
+      $("#user_life_bar").css('width', user_hpPercentage + '%');
+      if (current_user_hp === 0) hpZero = true;
+    }
+
+    if (target === "enemy" || target === "") {
+      current_enemy_hp = getHP("current_enemy_hp", current_enemy_hp);
+      console.log("敵の体力:" + current_enemy_hp);
+      console.log(damage)
+      current_enemy_hp = Math.max(0, current_enemy_hp - damage);
+      insertHP("current_enemy_hp", current_enemy_hp);
+      enemy_hpPercentage = Math.floor((current_enemy_hp / max_enemy_hp) * 100);
+      $("#enemy_life_bar").css('width', enemy_hpPercentage + '%');
+      if (current_enemy_hp === 0) hpZero = true;
+      console.log(`攻撃後 - Enemy HP: ${current_enemy_hp}, Percentage: ${enemy_hpPercentage}%, hpZero: ${hpZero}`);
+    }
+
+    if (hpZero) {
+        const lifeBar = target === "user" ? $("#user_life_bar") : $("#enemy_life_bar");
+        lifeBar.one('transitionend', function() {
+            animationEnded = true;
+            checkGameOver();
+        });
+
+        setTimeout(function() {
+            if (!animationEnded) {
+                console.log("Transition didn't occur, forcing game over check");
+                checkGameOver();
+            }
+        }, 800);
+    }
+
+    function checkGameOver() {
+      if (current_enemy_hp === 0) {
+          console.log("敵を倒しました！");
+          alert("You Win！！");
+      } else if (current_user_hp === 0) {
+          console.log("Lose");
+          alert("You Lose...");
+      }
+    } 
+  }
+  
+  // 昆虫選択モーダル
+  $("#select-btn").on("click", function(){
+    $("#modal-wrapper").fadeIn();
+  })
+
+  $("#submit-btn").on("click", function(){
+    $("#modal-wrapper").fadeOut();
+  })
+
+  $(".mushi-img").on('click', function(){
+    $(".mushi-img").css("background-color", "");
+    $(this).css("background-color", "#0066CC")
+    user_beat = $(this).text();
+  })
+
+  $("#submit-btn").on('click', function(){
+    selected_beat = user_beat;
+    if(selected_beat == "カブトムシ"){
+      max_user_hp = current_user_hp = kabutomushi.max_hp;
+    }
+    // console.log(selected_beat);
+    
+    if(selected_beat == "カブトムシ"){
+      $("#selected_beat_img").attr('src', kabutomushi.image)
+      $("#gu_tech").html("グー：" + kabutomushi.gu)
+      $("#choki_tech").html("チョキ：" + kabutomushi.choki)
+      $("#par_tech").html("パー：" +kabutomushi.par)
+    }
+  })
+
+  // バトルボタン押下後の動き
+  $(document).ready(function(){
+    $("#janken-wrapper").hide();
+    $("#user_name, #enemy_name").hide();
+    $("#life_wrapper").hide();
+    $("#battle_start").on("click", function(){
+      $("#janken-wrapper").show();
+      $("#user_name, #enemy_name").show();
+      $("#life_wrapper").show();
+      $("#user_beat_img").attr('src', kabutomushi.image)
+      $("#enemy_beat_img").attr('src', herakuresu.image)
+      max_enemy_hp = herakuresu.max_hp;
+      current_enemy_hp = herakuresu.max_hp;
+      insertHP("current_user_hp", max_user_hp);
+      insertHP("current_enemy_hp", max_enemy_hp);
+    })
+  })
+  
+  function disableButtons() {
+    $("#gu_btn, #cho_btn, #par_btn").prop("disabled", true);
+  }
+
+  function enableButtons() {
+    $("#gu_btn, #cho_btn, #par_btn").prop("disabled", false);
+  }
+  
+
+  // じゃんけんアルゴリズム
+  $("#gu_btn, #cho_btn, #par_btn").on("click", function(){
+    disableButtons();
+    const user_hand = $(this).data('id');  
+    const r = Math.random()*3;
+    const n = Math.ceil(r);
+    console.log(current_user_hp);
+    console.log(current_enemy_hp);
+
+    // ユーザーが出した手に沿った画像を表示
+    if(user_hand == 1){
+      $("#selected_hand_img").attr('src', hand_image.gu)
+    } else if(user_hand == 2){
+      $("#selected_hand_img").attr('src', hand_image.choki)
+    } else {
+      $("#selected_hand_img").attr('src', hand_image.par)
+    }
+
+    // コンピューターが出した手に沿って画像を表示
+    if(n == 1){
+      $("#enemy_hand_img").attr('src', hand_image.gu)
+    } else if(n == 2){
+      $("#enemy_hand_img").attr('src', hand_image.choki)
+    } else {
+      $("#enemy_hand_img").attr('src', hand_image.par)
+    }
+
+    // 勝敗判定
+    if(user_hand == n){
+      attackDamage(20, "");
+    }else if((user_hand == 1 && n == 2) || (user_hand == 2 && n == 3) || (user_hand == 3 && n == 1)){
+      if(user_hand == 1){
+        attackDamage(20*(kabutomushi.gu_power), "enemy");
+      }else if(user_hand == 2){
+        attackDamage(20*(kabutomushi.choki_power), "enemy");
+      }else if(user_hand == 3){
+        attackDamage(20*(kabutomushi.par_power), "enemy");
+      }
+    }
+    else {
+      if(n == 1){
+        attackDamage(20*(herakuresu.gu_power), "user");
+      } else if(n == 2){
+        attackDamage(20*(herakuresu.choki_power), "user");
+      } else if(n == 3){
+        attackDamage(20*(herakuresu.par_power), "user");
+      }
+    }
+    setTimeout(enableButtons, 3000);
+  })
+    
+    
+    
+    
+    
+    
+    
+
+</script>
+</body>
+</html>
