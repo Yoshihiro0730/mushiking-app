@@ -1,0 +1,37 @@
+{
+    "kabutomushi": {
+        "id" : 1,
+        "image": "./img/kabutomushi_2.jpg",
+        "gu": "ガンガンスマッシュ",
+        "gu_power": 1.2,
+        "choki": "ブルロック",
+        "choki_power": 1.2,
+        "par": "トルネードスロー",
+        "par_power": 1.8,
+        "max_hp": 160
+    },
+    "herakuresu": {
+        "id" : 3,
+        "image": "./img/herakuresu_2.jpg",
+        "gu": "ドラゴンアタック",
+        "gu_power": 1.5,
+        "choki": "デビルスリーパー",
+        "choki_power": 1.5,
+        "par": "ローリングドライバー",
+        "par_power": 2.0,
+        "max_hp": 200
+    },
+    "kuwagata":{
+        "id" : 2,
+        "image": "./img/kuwagata.jpg",
+        "gu": "サブマリンアタック",
+        "gu_power": 1.5,
+        "choki": "スーパーカワセミハッグ",
+        "choki_power": 1.8,
+        "par": "アースクエイクスロー",
+        "par_power": 1.2,
+        "max_hp": 140
+    }
+}
+  
+  

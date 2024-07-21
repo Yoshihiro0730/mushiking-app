@@ -3,7 +3,8 @@ body{
     padding:0;
     text-align:left;
     font-size: 32px;
-    background-image: url("../img/forest.jpg");
+    /* background-image: url("../img/forest.jpg"); */
+    background-color: #333;
     background-repeat: no-repeat;
     background-size: cover;
 }
@@ -30,20 +31,139 @@ p{
 }
 ul{
     padding: 0;
-    border-top: 1px solid #000000; 
-    display:table ;
-    table-layout: fixed;
+    /* border-top: 1px solid #000000;  */
+    /* display:table ;
+    table-layout: fixed; */
     width:100%;
+    display: flex;
 }
 li{
     text-align: center;
     list-style-type:none;
     border: 1px solid #666;
     background-color: #FFF;
-    display:table-cell;
+    /* display:table-cell; */
     cursor: pointer;
 }
 
+.mushi-king-wrapper {
+    width:100%;
+    height:auto;
+}
+
+.select-button-wrapper {
+    width: 80%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+}
+
+#select-btn {
+    position: relative;
+    width:500px;
+    height: 500px;
+    border-radius: 999999px;
+    font-size: 80px;
+    font-family: "DotGothic16", sans-serif;
+    font-style: normal;
+    cursor: pointer;
+    z-index: 1;
+}
+
+#select-btn::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+    z-index: -2;
+    border-radius: 50%;
+    background-size: 400%;
+    animation: glowing 30s linear infinite;
+}
+  
+#select-btn::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    right: 2px;
+    bottom: 2px;
+    background-color: #fff;
+    border-radius: 50%;
+    z-index: -1;
+}
+
+@keyframes glowing {
+    0% { background-position: 0 0; }
+    50% { background-position: 400% 0; }
+    100% { background-position: 0 0; }
+}  
+
+#select-btn:hover::before {
+    animation: glowing 15s linear infinite;
+}
+
+/* 虫際選択ボタンのスタイル */
+.re-select-button-wrapper {
+    position: absolute;
+    top:20%;
+    right: 5%;
+    z-index: 100;
+}
+
+.btn,
+a.btn,
+button.btn {
+  font-weight: 700;
+  line-height: 1.5;
+  position: relative;
+  display: inline-block;
+  padding: 0 6rem;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  text-align: center;
+  vertical-align: middle;
+  text-decoration: none;
+  letter-spacing: 0.1em;
+  color: #212529;
+  border-radius: 20px;
+}
+
+#re_select_button.btn-malformation {
+  width: 8vw;
+  height: 10vh;
+  font-size: 1.5rem;
+  padding: 2rem 4rem;
+  margin: auto;
+  color: #fff;
+  border-radius: 100% 80px / 80px 100%;
+  background-color: #eb6100;
+  border: none;  /* ボタンのデフォルトの境界線を削除 */
+}
+
+#re_select_button.btn-malformation:hover {
+  color: #fff;
+  border-radius: 60% 80% / 100% 80%;
+}
+
+.re-select-button-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+/* モーダルのスタイル */
 #modal-wrapper {
     position: fixed;
     top: 0;
@@ -53,6 +173,7 @@ li{
     background-color: rgba(0, 0, 0, 0.6);
     z-index: 100;
     display: none;
+    font-family: "DotGothic16", sans-serif;
 }
 
 .choice-beat {
@@ -74,6 +195,12 @@ li{
     /* align-items: center; */
     padding: 10px;
     margin: 0 auto;
+    text-align: center;
+    list-style-type:none;
+    border: 1px solid #666;
+    background-color: #FFF;
+    display:table-cell;
+    cursor: pointer;
 }
 
 .mushi-img img{
@@ -95,18 +222,49 @@ li{
     cursor: pointer;
 }
 
+/* 虫のプロフィール部分 */
+.user-beat-profile-wrapper {
+    position: relative;
+}
+
 #user-beat-profile{
     width: 50%;
     /* height: 30%; */
+    font-family: "DotGothic16", sans-serif;
     margin: auto;
     display: flex;
     justify-content: space-between;
-    background-color: rgba(255, 255, 255, 0.7);
+    background-color: rgba(255, 255, 255);
     text-align: center;
+    /* box-shadow: 2px 2px 6px rgba(255,0,0,.4); */
+    border: 4px solid;
+    border-image: linear-gradient(
+        315deg,
+        #704308 0%,
+        #ffce08 37%,
+        #fefeb2 47%,
+        #fafad6 50%,
+        #fefeb2 53%,
+        #e1ce08 63%,
+        #704308 100%
+    );
+    border-image: linear-gradient(
+        135deg,
+        #704308 0%,
+        #ffce08 37%,
+        #fefeb2 47%,
+        #fafad6 50%,
+        #fefeb2 53%,
+        #e1ce08 63%,
+        #704308 100%
+    ) 1;
+    border-image-width: 4px;
+    padding: 4px;
 }
 
 #selected_beat_img {
     height: 300px;
+    padding: 10px;
 }
 
 #user-beat-profile ul {
@@ -124,19 +282,85 @@ li{
     margin: auto 20px;
 }
 
+#battle_button_wrapper {
+    position: absolute;
+    bottom: -50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: auto;
+    z-index: 1;
+  }
+  
+  #battle_start {
+    display: block;
+    position: relative;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    width: 200px;
+    height: 78px;
+    line-height: 78px;
+    font-size: 24px;
+    border-radius: 39px;
+    text-decoration: none;
+    background-color: #63d4db;
+    color: #fbfbfb;
+    text-align: center;
+    transition: .2s;
+    border: none;
+    cursor: pointer;
+  }
+  
+  #battle_start:before, #battle_start:after {
+    content: "";
+    position: absolute;
+    z-index: -10;
+    width: 200px;
+    height: 78px;
+    top: 0;
+    left: 0;
+    border-radius: 39px;
+    background: radial-gradient(circle, #ffffff 0%, #a6f9ff 30%, #63d4db 70%, #4a9fa5 100%);
+    transform: translate3d(0,0,0);
+  }
+  
+  #battle_start:before {
+    animation: anime 2s ease-out infinite;
+  }
+  
+  #battle_start:after {
+    animation: anime 2s ease-out 1s infinite;
+  }
+  
+  @keyframes anime {
+    0% {
+      transform: scale(.95);
+      opacity: 1;
+    }
+    90% {
+      opacity: .1;
+    }
+    to {
+      transform: scale(1.2,1.4);
+      opacity: 0;
+    }
+  }
+
+
+
 /* バトル画面 */
 #battle_wrapper {
     display: flex;
     justify-content: center;
     margin: auto;
+    position: relative;
 }
 
 #user_battle_wrapper {
-    margin: 0 20vw;
+    margin: 0 auto;
 }
 
 #enemy_battle_wrapper {
-    margin: 0 20vw;
+    margin: 0 auto;
 }
 
 #user_name, #enemy_name {
@@ -151,7 +375,12 @@ li{
 
 #selected_hand_img, #enemy_hand_img {
     width: auto;
-    height: 300px;
+    height: 10vh;
+}
+
+#user_selected_hand, #enemy_selected_hand {
+    margin:2vh auto;
+    text-align: center;
 }
 
 /* HPバーの部分 */
@@ -159,14 +388,26 @@ li{
     display: flex;
     justify-content: center; 
     align-items: center;
-    gap: 30vw;
+    /* gap: 30vw; */
+    /* position: relative; */
 }
 
 #user_life_wrapper, #enemy_life_wrapper {
-    width: 500px;
+    position: absolute;
+    width: 30vw;
     height: 20px;
     background-color: #ddd;
     border: 1px solid #000;
+    bottom:-2vh;
+
+}
+
+#user_life_wrapper {
+    left:10%;
+}
+
+#enemy_life_wrapper {
+    right:10%;
 }
 
 #user_life_bar, #enemy_life_bar {
@@ -176,16 +417,6 @@ li{
     transition: width 0.5s linear;
 }
 
-#select-btn, #battle_start {
-    display: block;
-    margin: 100px auto;
-    width: 500px;
-    height: auto;
-    font-size: 24px;
-    background-color: aquamarine;
-    border-radius: 30px;
-    cursor: pointer;
-}
 
 #select-btn:hover {
     box-shadow: 0 5px 10px rgba(255, 255, 255, 0.5);
@@ -195,38 +426,110 @@ li{
     box-shadow: 0 5px 10px rgba(255, 255, 255, 0.5);
 }
 
+.junken-hand-wrapper{
+    margin: 20px auto 0;
+}
+
 #janken-wrapper {
     width: 50%;
-    margin: auto;
-    border-top: none;
+    margin:  auto;
+    /* display: flex; */
+    justify-content: center;
+    gap: 100px;
 }
 
-#gu_btn {
-    background-color: #f0908d;
-    border-radius: 20px;
+#janken-wrapper img{
+    width:100px;
+    height:auto;
+    object-fit: cover;
 }
 
-#cho_btn {
-    background-color: #f2f2b0;
-    border-radius: 20px;
-}
-
-#par_btn {
-    background-color: #83ccd2;
-    border-radius: 20px;
+#janken-wrapper li {
+    background-color: transparent;
+    border: none;
+    border-radius: 9999px;
+    position: relative;
+    overflow: hidden;
 }
 
 #gu_btn:hover {
-    box-shadow: 0 5px 10px rgba(255, 255, 255, 1);
+    box-shadow: 0 5px 10px rgba(255, 0, 0, 1);
     transform: scale(1.2, 1.2);
 }
 
 #cho_btn:hover {
-    box-shadow: 0 5px 10px rgba(255, 255, 255, 1);
+    box-shadow: 0 5px 10px rgba(255, 255, 0, 1);
     transform: scale(1.2, 1.2);
 }
 
 #par_btn:hover {
-    box-shadow: 0 5px 10px rgba(255, 255, 255, 1);
+    box-shadow: 0 5px 10px rgba(0, 255, 255, 1);
     transform: scale(1.2, 1.2);
+}
+
+/* モーダルのスタイル */
+.result-modal-wrapper {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 100;
+    display: none;
+    font-family: "DotGothic16", sans-serif;
+}
+
+#result_wrapper{
+    width: 30vw;
+    height: 50vh;
+    margin: auto;
+    background-color:#fff;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#result{
+    height: auto;
+    font-weight: 700;
+    font-size: 36px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 5vh;  
+}
+
+#final_select_wrapper{
+    display: flex;
+    position: relative;
+    justify-content: space-between;
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    padding: 0 20px;
+    /* margin-top: auto;   */
+}
+
+#retry_button, #end_button {
+    width: 45%;
+    height: 5vh;
+    background-color: #e0e0e0;
+    border: none;
+    /* border-radius: 5px; */
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    cursor: pointer;
+    font-size: 24px;
+    color: #333;
+    transition: all 0.2s ease;
+    text-align: center;
 }
