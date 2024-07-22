@@ -98,6 +98,17 @@
         </div>
       </div>
     </div>
+    <div id="nav_button_wrapper">
+      <span id="nav_button"></span>
+    </div>
+    <nav id="side_nav">
+      <h2>戦績</h2>
+      <ul id="nav_list">
+        <li id="nav_contents_win"></li>
+        <li id="nav_contents_lose"></li>
+        <li id="nav_contents_draw"></li>
+      </ul>
+    </nav>
   </div>
 </main>
 
@@ -107,6 +118,7 @@
 // グー：1、チョキ：2、パー：3
   
   // グローバル変数定義
+  let nav_bar = false;
   let user_beat = null;
   let selected_beat = null;
   let user_beat_eng = null;
@@ -119,6 +131,9 @@
   let kabutomushi;
   let herakuresu;
   let kuwagata;
+  let count_win = 0;
+  let count_lose = 0;
+  let count_draw = 0;
 
   const hand_image = {
     gu: "https://mushiking.com/old/cards/img/iconb_wg.gif",
@@ -182,13 +197,24 @@
 
     function checkGameOver() {
       if (current_enemy_hp === 0) {
+          count_win += 1;
+          insertHP('win', count_win);
           $(".result-modal-wrapper").fadeIn();
           $("#result").html("You Win!!");
           $("#retry_button").html("やり直す");
           $("#end_button").html("終わり");
       } else if (current_user_hp === 0) {
+          count_lose += 1;
+          insertHP('lose', count_lose);
           $(".result-modal-wrapper").fadeIn();
           $("#result").html("Lose...");
+          $("#retry_button").html("やり直す");
+          $("#end_button").html("終わり");
+      } else if (current_enemy_hp === current_user_hp === 0){
+          count_draw += 1;
+          insertHP('draw', count_draw);
+          $(".result-modal-wrapper").fadeIn();
+          $("#result").html("draw");
           $("#retry_button").html("やり直す");
           $("#end_button").html("終わり");
       }
@@ -287,7 +313,9 @@
     $("#janken-wrapper").hide();
     $("#user_name, #enemy_name").hide();
     $("#life_wrapper").hide();
-    
+    insertHP('win', count_win);
+    insertHP('lose', count_lose);
+    insertHP('draw', count_draw);
   })
 
   $(".mushi-img").on('click', function(){
@@ -315,8 +343,8 @@
       current_enemy_hp = enemy_info.max_hp;
       insertHP("current_user_hp", max_user_hp);
       insertHP("current_enemy_hp", max_enemy_hp);
-      $("#battle_button_wrapper").fadeOut();
-      $(".re-select-button-wrapper").fadeOut();
+      $("#battle_button_wrapper").hide();
+      $(".re-select-button-wrapper").hide();
     })
   })
   
@@ -380,6 +408,7 @@
     setTimeout(enableButtons, 3000);
   })
 
+  // 終わりボタン押下時の動き
   $('#end_button').click(function() {
     $('.result-modal-wrapper').hide();
     localStorage.removeItem("current_user_hp");
@@ -387,6 +416,7 @@
     location.reload();
   });
 
+  // やり直しボタン押下時の動き
   $("#retry_button").click(function(){
     localStorage.removeItem("current_user_hp");
     localStorage.removeItem("current_enemy_hp");
@@ -405,6 +435,32 @@
     setTimeout(function(){
       $("#battle_button_wrapper").fadeIn(1000);
     }, 1000)
+  });
+
+
+  // サイドバー押下時の動き
+  $(document).ready(function() {
+    $("#side_nav").css("left", "-20rem");
+    $("#nav_button_wrapper").css("left", "1rem");
+    $("#nav_button").css("transform", "rotate(45deg)");
+  })
+  $("#nav_button_wrapper").on("click", function(){
+    if (nav_bar) {
+        $("#side_nav").css("left", "-20rem");
+        $("#nav_button_wrapper").css("left", "1rem");
+        $("#nav_button").css("transform", "rotate(45deg)");
+    } else {
+        let get_count_win = getHP('win');
+        let get_count_lose = getHP('lose');
+        let get_count_draw = getHP('draw');
+        $("#side_nav").css("left", "0");
+        $("#nav_button_wrapper").css("left", "10rem");
+        $("#nav_button").css("transform", "rotate(225deg)");
+        $("#nav_contents_win").html(`勝ち：${get_count_win}`);
+        $("#nav_contents_lose").html(`負け：${get_count_lose}`);
+        $("#nav_contents_draw").html(`引き分け：${get_count_draw}`);
+    }
+    nav_bar = !nav_bar;
   })
 
 </script>
