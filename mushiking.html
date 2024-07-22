@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width">
 <script src="js/jquery-2.1.3.min.js"></script>
 <link rel="stylesheet" href="css/sample.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=M+PLUS+1p&display=swap" rel="stylesheet">
 <title>じゃんけん</title>
 </head>
 <body>
@@ -15,7 +18,15 @@
 
 <main>
   <div class="mushi-king-wrapper">
-    <button id="select-btn">虫を選ぶ</button>
+    <!-- 昆虫選択ボタンの表示 -->
+    <div class="select-button-wrapper">
+      <button id="select-btn">虫を選ぶ</button>
+    </div>
+    <!-- 昆虫際選択ボタンの表示 -->
+    <div class="re-select-button-wrapper">
+      <a href="#" id="re_select_button" class="btn btn-malformation">虫を選び直す</a>
+    </div>
+    <!-- モーダル画面 -->
     <div id="modal-wrapper">
       <div class="choice-beat">
         <h2>使用する昆虫を選んでね！</h2>
@@ -29,20 +40,29 @@
         </form>
       </div>
     </div>
-    <div id="user-beat-profile">
-      <img id="selected_beat_img" src="" alt="">
-      <ul>
-        <li id="gu_tech"></li>
-        <li id="choki_tech"></li>
-        <li id="par_tech"></li>
+    <!-- 虫のプロフィールレイアウト -->
+    <div class="user-beat-profile-wrapper">
+      <div id="user-beat-profile">
+        <img id="selected_beat_img" src="" alt="">
+        <ul>
+          <li id="gu_tech"></li>
+          <li id="choki_tech"></li>
+          <li id="par_tech"></li>
+        </ul>
+      </div>
+      <!-- 勝負ボタン -->
+      <div id="battle_button_wrapper">
+        <button id="battle_start">勝負開始</button>
+      </div>
+    </div>
+    <!-- 出す手のコマ -->
+    <div class="junken-hand-wrapper">
+      <ul id="janken-wrapper">
+        <li id="gu_btn" data-id="1"><img src="https://mushiking.com/old/cards/img/iconb_wg.gif" alt=""></li>
+        <li id="cho_btn" data-id="2"><img src="https://mushiking.com/old/cards/img/iconb_wc.gif" alt=""></li>
+        <li id="par_btn" data-id="3"><img src="https://mushiking.com/old/cards/img/iconb_wp.gif" alt=""></li>
       </ul>
     </div>
-    <button id="battle_start">勝負開始</button>
-    <ul id="janken-wrapper">
-      <li id="gu_btn" data-id="1">グー</li>
-      <li id="cho_btn" data-id="2">チョキ</li>
-      <li id="par_btn" data-id="3">パー</li>
-    </ul>
     <!-- バトル画面 -->
     <div id="battle_wrapper">
       <div id="user_battle_wrapper">
@@ -50,7 +70,6 @@
         <img id="user_beat_img" src="" alt="">
         <div id="user_selected_hand">
           <img id="selected_hand_img" src="" alt="">
-          <h2 id="selected_hand_text"></h2>
         </div>
       </div>
       <div id="enemy_battle_wrapper">
@@ -58,21 +77,27 @@
         <img id="enemy_beat_img" src="" alt="">
         <div id="enemy_selected_hand">
           <img id="enemy_hand_img" src="" alt="">
-          <h2 id="enemy_hand_text"></h2>
+        </div>
+      </div>
+      <!-- 体力ゲージ -->
+      <div id="life_wrapper">
+        <div id="user_life_wrapper">
+          <div id="user_life_bar"></div>
+        </div>
+        <div id="enemy_life_wrapper">
+          <div id="enemy_life_bar"></div>
         </div>
       </div>
     </div>
-    <div id="life_wrapper">
-      <div id="user_life_wrapper">
-        <div id="user_life_bar"></div>
-      </div>
-      <div id="enemy_life_wrapper">
-        <div id="enemy_life_bar"></div>
+    <div class="result-modal-wrapper">
+      <div id="result_wrapper">
+        <div id="result"></div>
+        <div id="final_select_wrapper">
+          <div id="retry_button"></div>
+          <div id="end_button"></div>
+        </div>
       </div>
     </div>
-    
-    <!-- <div>コンピュータの出した手は？「<span id="pc_hands">なに？</span>」</div>
-    <div id="judgment">勝ち</div> -->
   </div>
 </main>
 
@@ -84,37 +109,21 @@
   // グローバル変数定義
   let user_beat = null;
   let selected_beat = null;
+  let user_beat_eng = null;
+  let enemy_info = null;
   let max_user_hp = 0;
   let current_user_hp = 0;
   let max_enemy_hp = 0;
   let current_enemy_hp = 0;
-
-  const kabutomushi = {
-    image: "./img/kabutomushi_2.jpg",
-    gu: "ガンガンスマッシュ",
-    gu_power: 1.2,
-    choki: "ブルロック",
-    choki_power: 1.2,
-    par: "トルネードスロー",
-    par_power: 1.8,
-    max_hp: 160
-  }
-
-  const herakuresu = {
-    image: "./img/herakuresu_2.jpg",
-    gu: "ドラゴンアタック",
-    gu_power: 1.5,
-    choki: "デビルスリーパー",
-    choki_power: 1.5,
-    par: "ローリングドライバー",
-    par_power: 2.0,
-    max_hp: 200
-  }
+  let insects_list;
+  let kabutomushi;
+  let herakuresu;
+  let kuwagata;
 
   const hand_image = {
-    gu: "./img/gu.png",
-    choki: "./img/choki.png",
-    par: "./img/par.png"
+    gu: "https://mushiking.com/old/cards/img/iconb_wg.gif",
+    choki: "https://mushiking.com/old/cards/img/iconb_wc.gif",
+    par: "https://mushiking.com/old/cards/img/iconb_wp.gif"
   }
 
   // ローカルストレージへHPを格納
@@ -173,22 +182,112 @@
 
     function checkGameOver() {
       if (current_enemy_hp === 0) {
-          console.log("敵を倒しました！");
-          alert("You Win！！");
+          $(".result-modal-wrapper").fadeIn();
+          $("#result").html("You Win!!");
+          $("#retry_button").html("やり直す");
+          $("#end_button").html("終わり");
       } else if (current_user_hp === 0) {
-          console.log("Lose");
-          alert("You Lose...");
+          $(".result-modal-wrapper").fadeIn();
+          $("#result").html("Lose...");
+          $("#retry_button").html("やり直す");
+          $("#end_button").html("終わり");
       }
     } 
   }
+
+  // ランダムで敵を指定する関数
+  function getEnemyData(id) {
+    for (let key in insects_list) {
+      if(insects_list[key].id === id){
+        return insects_list[key];
+      }
+    }
+    return null
+  }
   
+  // 昆虫が選択されているかの監視関数
+    function checkSelect(){
+      if(user_beat == null){
+        alert("昆虫を選択してください。");
+        return false;
+      }
+      return true;
+    }
+
   // 昆虫選択モーダル
   $("#select-btn").on("click", function(){
     $("#modal-wrapper").fadeIn();
   })
 
-  $("#submit-btn").on("click", function(){
+  // 昆虫確定ボタンを押下後の動き
+  $("#submit-btn").on("click", function(event){
+    if(!checkSelect()) {
+      return;
+    }
     $("#modal-wrapper").fadeOut();
+    $("#user-beat-profile").show();
+    $(".select-button-wrapper").hide();
+    $(".re-select-button-wrapper").show();
+    setTimeout(function(){
+      $("#battle_button_wrapper").fadeIn(1000);
+    }, 1000)
+    selected_beat = user_beat;
+    if(selected_beat == "カブトムシ"){
+      user_beat_eng = "kabutomushi";
+      max_user_hp = current_user_hp = kabutomushi.max_hp;
+      $("#selected_beat_img").attr('src', kabutomushi.image)
+      $("#gu_tech").html("グー：" + kabutomushi.gu)
+      $("#choki_tech").html("チョキ：" + kabutomushi.choki)
+      $("#par_tech").html("パー：" +kabutomushi.par)
+    } else if(selected_beat == "クワガタ") {
+      user_beat_eng = "kuwagata";
+      console.log(user_beat_eng);
+      max_user_hp = current_user_hp = kuwagata.max_hp;
+      $("#selected_beat_img").attr('src', kuwagata.image)
+      $("#gu_tech").html("グー：" + kuwagata.gu)
+      $("#choki_tech").html("チョキ：" + kuwagata.choki)
+      $("#par_tech").html("パー：" +kuwagata.par)
+    } else {
+      user_beat_eng = "herakuresu";
+      max_user_hp = current_user_hp = herakuresu.max_hp;
+      $("#selected_beat_img").attr('src', herakuresu.image)
+      $("#gu_tech").html("グー：" + herakuresu.gu)
+      $("#choki_tech").html("チョキ：" + herakuresu.choki)
+      $("#par_tech").html("パー：" +herakuresu.par)
+    }
+  })
+
+  // 昆虫再選択画面表示時の動き
+  $("#re_select_button").on("click", function(){
+    $("#modal-wrapper").fadeIn();
+  })
+
+  // 昆虫選択モーダルを画面外タップで非表示にする
+  $(document).on('click', function(event) {
+    // 表示したポップアップ以外の部分をクリックしたとき
+    if ($(event.target).is('#modal-wrapper')) {
+      $('#modal-wrapper').fadeOut();
+    }
+  });
+
+  // 初期の画面制御
+  $(document).ready(function(){
+    // JSONファイルから昆虫データを取得
+    $.getJSON('../assets/insects_list.json', function(data) {
+      insects_list = data;
+      console.log(insects_list.kabutomushi.choki); // JSONデータが格納された変数を確認
+      kabutomushi = insects_list.kabutomushi;
+      herakuresu = insects_list.herakuresu;
+      kuwagata = insects_list.kuwagata;
+    });
+    $("#user-beat-profile").hide();
+    $("#battle_button_wrapper").hide();
+    $(".re-select-button-wrapper").hide();
+    $(".result-modal-wrapper").hide();
+    $("#janken-wrapper").hide();
+    $("#user_name, #enemy_name").hide();
+    $("#life_wrapper").hide();
+    
   })
 
   $(".mushi-img").on('click', function(){
@@ -197,36 +296,27 @@
     user_beat = $(this).text();
   })
 
-  $("#submit-btn").on('click', function(){
-    selected_beat = user_beat;
-    if(selected_beat == "カブトムシ"){
-      max_user_hp = current_user_hp = kabutomushi.max_hp;
-    }
-    // console.log(selected_beat);
-    
-    if(selected_beat == "カブトムシ"){
-      $("#selected_beat_img").attr('src', kabutomushi.image)
-      $("#gu_tech").html("グー：" + kabutomushi.gu)
-      $("#choki_tech").html("チョキ：" + kabutomushi.choki)
-      $("#par_tech").html("パー：" +kabutomushi.par)
-    }
-  })
-
   // バトルボタン押下後の動き
   $(document).ready(function(){
-    $("#janken-wrapper").hide();
-    $("#user_name, #enemy_name").hide();
-    $("#life_wrapper").hide();
-    $("#battle_start").on("click", function(){
+    $(document).on("click", "#battle_start", function(){
+      let enemy_id = Math.random()*3;
+      enemy_id = Math.ceil(enemy_id);
+      const enemy_info = getEnemyData(enemy_id);
+      console.log(enemy_info);
+      $("#selected_hand_img, #enemy_hand_img").attr('src', "")
       $("#janken-wrapper").show();
       $("#user_name, #enemy_name").show();
       $("#life_wrapper").show();
-      $("#user_beat_img").attr('src', kabutomushi.image)
-      $("#enemy_beat_img").attr('src', herakuresu.image)
-      max_enemy_hp = herakuresu.max_hp;
-      current_enemy_hp = herakuresu.max_hp;
+      $("#battle_wrapper").show();
+      $(".junken-hand-wrapper").show(); 
+      $("#user_beat_img").attr('src', insects_list[user_beat_eng].image)
+      $("#enemy_beat_img").attr('src', enemy_info.image)
+      max_enemy_hp = enemy_info.max_hp;
+      current_enemy_hp = enemy_info.max_hp;
       insertHP("current_user_hp", max_user_hp);
       insertHP("current_enemy_hp", max_enemy_hp);
+      $("#battle_button_wrapper").fadeOut();
+      $(".re-select-button-wrapper").fadeOut();
     })
   })
   
@@ -289,13 +379,33 @@
     }
     setTimeout(enableButtons, 3000);
   })
+
+  $('#end_button').click(function() {
+    $('.result-modal-wrapper').hide();
+    localStorage.removeItem("current_user_hp");
+    localStorage.removeItem("current_enemy_hp");
+    location.reload();
+  });
+
+  $("#retry_button").click(function(){
+    localStorage.removeItem("current_user_hp");
+    localStorage.removeItem("current_enemy_hp");
+    $(".result-modal-wrapper").fadeOut();
+    $(".re-select-button-wrapper").show();
+    $(".junken-hand-wrapper").hide();
+    $("#battle_wrapper").hide();
+    current_user_hp = max_user_hp;
+    current_enemy_hp = max_enemy_hp;
+    insertHP("current_user_hp", current_user_hp);
+    insertHP("current_enemy_hp", current_enemy_hp);
     
-    
-    
-    
-    
-    
-    
+    // HPバーを100%に戻す
+    $("#user_life_bar, #enemy_life_bar").css('width', '100%');
+
+    setTimeout(function(){
+      $("#battle_button_wrapper").fadeIn(1000);
+    }, 1000)
+  })
 
 </script>
 </body>
