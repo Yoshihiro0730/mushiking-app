@@ -299,7 +299,7 @@
   // 初期の画面制御
   $(document).ready(function(){
     // JSONファイルから昆虫データを取得
-    $.getJSON('../assets/insects_list.json', function(data) {
+    $.getJSON('/assets/insects_list.json', function(data) {
       insects_list = data;
       console.log(insects_list.kabutomushi.choki); // JSONデータが格納された変数を確認
       kabutomushi = insects_list.kabutomushi;
